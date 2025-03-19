@@ -4,6 +4,7 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css"
 import Navbar from "../components/Navbar";
 import { Toaster } from "react-hot-toast";
+import { AppProvider } from "../context/AppProvider";
 
 // ASIGNAN A VARIABLES CSS LOS VALORES DE LAS FUENTES
 /*const geistSans = Geist({
@@ -35,9 +36,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Toaster />
-        <Navbar />
-        {children}
+        <AppProvider>
+          <Toaster />
+          <Navbar />
+          {children}
+        </AppProvider>
       </body>
     </html>
   );

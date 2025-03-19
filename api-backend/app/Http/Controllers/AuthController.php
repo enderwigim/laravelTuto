@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -15,6 +16,8 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed'
         ]);
+
+
 
         // Encriptar la contraseña antes de guardar el usuario
         $data['password'] = bcrypt($data['password']);
@@ -30,8 +33,9 @@ class AuthController extends Controller
             "email" => "required|email",
             "password" => "required"
         ]);
+
         
-        if(Auth::attempt($request->only("email", "password"))){
+        if(!Auth::attempt($request->only("email", "password"))){
             return response()->json([
                 "message" => "Invalid login details"
             ], 401);
@@ -41,6 +45,9 @@ class AuthController extends Controller
          * @var \App\Models\User $user
          */
         $user = Auth::user();
+        if (!$user) {
+            return response()->json(["message" => "No user authenticated"], 401);
+        }
         $token = $user->createToken("myToken")->plainTextToken;
 
         return response()->json([
